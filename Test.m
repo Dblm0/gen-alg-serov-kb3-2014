@@ -1,8 +1,8 @@
 clear all;
 clc;
 % генерация X на основе битовой хромосомы
-Nbits = 64;
-Xn = 100;
+Nbits = 8;
+Xn = 8;
 bits = zeros(Xn,Nbits);
 X = zeros(Xn,2);
 for i = 1:Xn
@@ -10,10 +10,10 @@ for i = 1:Xn
     X(i,:) = DecodeToX(bits(i,:),[0 79]);
 end
 % график точек X
-grid on;
-xlabel('X1');
-ylabel('X2');
-plot(X(:,1),X(:,2),'*r');
+% plot(X(:,1),X(:,2),'*r');
+% xlabel('X1');
+% ylabel('X2');
+% grid on;
 
 % формирование таблицы испытаний
 
@@ -35,14 +35,26 @@ for i = 1 : Xn
             b = b + 1;
         end
     end
-    Phi(i) = 1/(1+b/(Xn-1))^q;    
+    Phi(i) = 1/(1+b/(Xn-1))^q;
 end
 % график точек J
-figure;
-hold on;
-grid on;
-xlabel('J1');
-ylabel('J2');
-pos = find(Phi == 1);
-plot(J(:,1),J(:,2),'*b');
-plot(J(pos,1),J(pos,2),'*r');
+% figure;
+% hold on;
+% grid on;
+% xlabel('J1');
+% ylabel('J2');
+% pos = find(Phi == 1);
+% plot(J(:,1),J(:,2),'*b');
+% plot(J(pos,1),J(pos,2),'or');
+
+% формирование массива родителей
+Parents = zeros(Xn/2,Nbits);
+indexes = 1:Xn;
+for i = 1 : Xn/2
+    Bts = bits(indexes,:);
+    Intervals = BuildIntervals(Phi(indexes));
+    r = rand()*sum(Phi(indexes));
+    pos = find(Intervals(:,1)<= r & r <Intervals(:,2));
+    Parents(i,:) = Bts(pos,:);
+    indexes(pos) = [];
+end
