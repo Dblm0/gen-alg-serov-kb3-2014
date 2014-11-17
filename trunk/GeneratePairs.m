@@ -1,8 +1,8 @@
 function Pairs = GeneratePairs(Count)
 
-Pairs = zeros(Count/2,2);
-indexes = 1 : Count/2;
-for i = 1 : Count/4
+Pairs = zeros(Count,2);
+indexes = 1 : Count;
+for i = 1 : Count/2
     for j = 1 : 2
         r = indexes(randi([1 size(indexes,2)]));
         pos = indexes == r;
@@ -12,8 +12,8 @@ for i = 1 : Count/4
 end
 % формирование второго набора пар, отличного от первого
 
-indexes = 1 : Count/2;
-for i = Count/4 + 1 : Count/2
+indexes = 1 : Count;
+for i = Count/2 + 1 : Count
     r = indexes(randi([1 size(indexes,2)]));
     pos = indexes == r;
     Pairs(i,1) = r;
@@ -24,8 +24,8 @@ for i = Count/4 + 1 : Count/2
         r = indexes(randi([1 size(indexes,2)]));
         pos = indexes == r;
         Pairs(i,2) = r;
-        cs1 =  ismember(Pairs(i,:),Pairs(1:Count/4,:),'rows');
-        cs2 = ismember(fliplr(Pairs(i,:)),Pairs(1:Count/4,:),'rows');
+        cs1 =  ismember(Pairs(i,:),Pairs(1:Count/2,:),'rows');
+        cs2 = ismember(fliplr(Pairs(i,:)),Pairs(1:Count/2,:),'rows');
     end
     indexes(pos) = [];  
 end
