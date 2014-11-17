@@ -57,8 +57,19 @@ for i = 1 : Xn/2
     Parents(i,:) = Bits(indexes(pos),:);
     indexes(pos) = [];
 end
-% формирование пар родителей
-Pairs = GeneratePairs(size(Parents,2));
 
-clear b j i pos r cs1 cs2;
+% формирование пар родителей
+Pairs = GeneratePairs(Xn/2);
+
+% формирование потомства на основе N-точечного кроссовера
+Points = [4 8 12];
+Children = zeros(Xn/2,Nbits);
+for i = 1 : Xn/2
+    P1 = Parents(Pairs(i,1) , : );
+    P2 = Parents(Pairs(i,2) , : );
+    Children(2*i-1 : 2*i, : ) = NPointCross(P1,P2,Points);
+end
+
+
+clear b j i pos r;
 
