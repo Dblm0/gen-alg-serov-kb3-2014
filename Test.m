@@ -64,11 +64,19 @@ Pairs = GeneratePairs(Xn/2);
 % формирование потомства на основе N-точечного кроссовера
 Points = [4 8 12];
 Children = zeros(Xn/2,Nbits);
+
 for i = 1 : Xn/2
     P1 = Parents(Pairs(i,1) , : );
     P2 = Parents(Pairs(i,2) , : );
     Children(2*i-1 : 2*i, : ) = NPointCross(P1,P2,Points);
 end
+
+% Мутация и инверсия
+for i = 1 : Xn
+    Children(i,:) = Mutate(Children(i,:));
+    Children(i,:) = Inverse(Children(i,:));
+end
+
 
 
 clear b j i pos r;
