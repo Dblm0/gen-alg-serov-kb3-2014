@@ -10,10 +10,10 @@ for i = 1:Xn
     X(i,:) = DecodeToX(Bits(i,:),[0 79]);
 end
 % график точек X
-% plot(X(:,1),X(:,2),'*r');
-% xlabel('X1');
-% ylabel('X2');
-% grid on;
+plot(X(:,1),X(:,2),'*r');
+xlabel('X1');
+ylabel('X2');
+grid on;
 
 % формирование таблицы испытаний
 
@@ -38,25 +38,18 @@ for i = 1 : Xn
     Phi(i) = 1/(1+b/(Xn-1))^q;
 end
 % график точек J
-% figure;
-% hold on;
-% grid on;
-% xlabel('J1');
-% ylabel('J2');
-% pos = find(Phi == 1);
-% plot(J(:,1),J(:,2),'*b');
-% plot(J(pos,1),J(pos,2),'or');
+figure;
+hold on;
+grid on;
+xlabel('J1');
+ylabel('J2');
+pos = find(Phi == 1);
+plot(J(:,1),J(:,2),'*b');
+plot(J(pos,1),J(pos,2),'or');
 
 % формирование массива родителей
-Parents = zeros(Xn/2,Nbits);
-indexes = 1:Xn;
-for i = 1 : Xn/2
-    Intervals = BuildIntervals(Phi(indexes));
-    r = rand()*sum(Phi(indexes));
-    pos = find(Intervals(:,1)<= r & r <Intervals(:,2));
-    Parents(i,:) = Bits(indexes(pos),:);
-    indexes(pos) = [];
-end
+
+Parents = GetParents(Bits,Phi);
 
 % формирование пар родителей
 Pairs = GeneratePairs(Xn/2);
@@ -72,9 +65,14 @@ for i = 1 : Xn/2
 end
 
 % Мутация и инверсия
+P = 0.05;
 for i = 1 : Xn
-    Children(i,:) = Mutate(Children(i,:));
-    Children(i,:) = Inverse(Children(i,:));
+    if (rand < P)
+        Children(i,:) = Mutate(Children(i,:));
+    end
+    if (rand < P)
+        Children(i,:) = Inverse(Children(i,:));
+    end
 end
 
 
