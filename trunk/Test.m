@@ -9,7 +9,11 @@ for i = 1:Xn
     Bits(i,:) = BinGenerator(Nbits);
     X(i,:) = DecodeToX(Bits(i,:),[0 79]);
 end
+
 % график точек X
+figure('Name','Начальная популяция')
+title('Стартовое поколение')
+subplot(1, 2, 1)
 plot(X(:,1),X(:,2),'*r');
 xlabel('X1');
 ylabel('X2');
@@ -37,8 +41,9 @@ for i = 1 : Xn
     end
     Phi(i) = 1/(1+b/(Xn-1))^q;
 end
+sum(Phi == 1)
 % график точек J
-figure;
+subplot(1, 2, 2)
 hold on;
 grid on;
 xlabel('J1');
@@ -47,35 +52,6 @@ pos = find(Phi == 1);
 plot(J(:,1),J(:,2),'*b');
 plot(J(pos,1),J(pos,2),'or');
 
-% формирование массива родителей
-
-Parents = GetParents(Bits,Phi);
-
-% формирование пар родителей
-Pairs = GeneratePairs(Xn/2);
-
-% формирование потомства на основе N-точечного кроссовера
-Points = [4 8 12];
-Children = zeros(Xn/2,Nbits);
-
-for i = 1 : Xn/2
-    P1 = Parents(Pairs(i,1) , : );
-    P2 = Parents(Pairs(i,2) , : );
-    Children(2*i-1 : 2*i, : ) = NPointCross(P1,P2,Points);
-end
-
-% Мутация и инверсия
-P = 0.05;
-for i = 1 : Xn
-    if (rand < P)
-        Children(i,:) = Mutate(Children(i,:));
-    end
-    if (rand < P)
-        Children(i,:) = Inverse(Children(i,:));
-    end
-end
-
-
-
-clear b j i pos r;
+[Bits2 , Phi2] = NextGeneration(Bits,Phi,'New');
+[Bits3 , Phi3] = NextGeneration(Bits2,Phi2,'New2');
 
