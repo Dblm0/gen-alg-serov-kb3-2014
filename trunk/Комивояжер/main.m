@@ -1,40 +1,32 @@
 clear all
 close all
 clc
-R = 10;
-Nr = 9;
-N = 10;
+R = 0.5;
+Nr = 60;
+N = 30;
 c = sqrt(Nr);
 Points = GetCirclePoints(N , R);
 Matr = GetDistMatr(Points);
 Routes = GenerateRoutes(Nr, N);
 RoutesLength = zeros(Nr,1);
-RoutesCoord = zeros(Nr,N,2);
-figure('Name','Начальная популяция',...
-    'units','normalized','outerposition',[0 0 1 1]);
+RoutesCoord = zeros(Nr,N + 1,2);
 for nr = 1 : Nr
-    RoutesCoord(nr , : , :) = Points(Routes(nr , :) , :);
-    RoutesLength(nr) = GetRouteLength(Routes(nr,:) , Matr);
-    subplot(c,c,nr);
-    plot(RoutesCoord(nr,:,1),RoutesCoord(nr,:,2),'--')
-    axis square
-    title(strcat('L = ' , num2str( RoutesLength(nr) ) ));
+    RoutesCoord(nr , : , :) = Points([Routes(nr , :) Routes(nr,1)], :);
+    RoutesLength(nr) = GetRouteLength([Routes(nr , :) Routes(nr,1)] , Matr);
 end
+pos = find(RoutesLength == min(RoutesLength),1,'first');
+ShowRoute(RoutesCoord(pos,:,:) , RoutesLength(pos,:),'Начальная популяция' );
 % Следующие поколения
-k = 3;
-Min = zeros(k,1);
-for i = 1 : k
+NGen = 2;
+Min = zeros(NGen,1);
+for i = 1 : NGen
     Name = sprintf('%d Generation',i);
     Routes = GreedyCross(Routes,Matr);
-    figure('Name',Name,...
-        'units','normalized','outerposition',[0 0 1 1]);
     for nr = 1 : Nr
-        RoutesCoord(nr , : , :) = Points(Routes(nr , :) , :);
-        RoutesLength(nr) = GetRouteLength(Routes(nr,:) , Matr);
-        subplot(c,c,nr);
-        plot(RoutesCoord(nr,:,1),RoutesCoord(nr,:,2),'--')
-        axis square
-        title(strcat('L = ' , num2str( RoutesLength(nr) ) ));
+    RoutesCoord(nr , : , :) = Points([Routes(nr , :) Routes(nr,1)], :);
+    RoutesLength(nr) = GetRouteLength([Routes(nr , :) Routes(nr,1)] , Matr);
     end
     Min(i) = min(RoutesLength);
+    pos = find(RoutesLength ==  Min(i) ,1,'first');
+    ShowRoute(RoutesCoord(pos,:,:) , RoutesLength(pos,:),Name );
 end
