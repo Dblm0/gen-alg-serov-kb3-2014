@@ -1,8 +1,9 @@
+close all;
 clear all;
 clc;
 % генерация X на основе битовой хромосомы
-Nbits = 16;
-Xn = 32;
+Nbits = 64;
+Xn = 500;
 Bits = zeros(Xn,Nbits);
 X = zeros(Xn,2);
 for i = 1:Xn
@@ -10,14 +11,6 @@ for i = 1:Xn
     X(i,:) = DecodeToX(Bits(i,:),[0 79]);
 end
 
-% график точек X
-figure('Name','Начальная популяция')
-title('Стартовое поколение')
-subplot(1, 2, 1)
-plot(X(:,1),X(:,2),'*r');
-xlabel('X1');
-ylabel('X2');
-grid on;
 
 % формирование таблицы испытаний
 
@@ -41,17 +34,16 @@ for i = 1 : Xn
     end
     Phi(i) = 1/(1+b/(Xn-1))^q;
 end
-sum(Phi == 1)
-% график точек J
-subplot(1, 2, 2)
-hold on;
-grid on;
-xlabel('J1');
-ylabel('J2');
-pos = find(Phi == 1);
-plot(J(:,1),J(:,2),'*b');
-plot(J(pos,1),J(pos,2),'or');
 
-[Bits2 , Phi2] = NextGeneration(Bits,Phi,'New');
-[Bits3 , Phi3] = NextGeneration(Bits2,Phi2,'New2');
+Count = sum(Phi == 1);
+% pos = find(Phi == 1);
+% ShowGeneration(X,J,pos,'Начальная популяция');
 
+K = 30;
+AllPhiCount = zeros(K,1);
+for i = 1 : K
+    str = sprintf('%d Generation',i);
+    [Bits , Phi] = NextGeneration(Bits,Phi,str);  
+    AllPhiCount(i) = sum(Phi == 1);
+end
+max(AllPhiCount)

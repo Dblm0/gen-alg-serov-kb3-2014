@@ -7,7 +7,7 @@ Pn = size(Parents,1);
 % формирование пар родителей
 Pairs = GeneratePairs(Pn);
 % формирование потомства на основе N-точечного кроссовера
-Points = [4 8 12];
+Points = [randi([2 Nbits/2-1]) , Nbits/2 ,randi([Nbits/2 + 2 Nbits])];
 Children = zeros(Pn,Nbits);
 
 for i = 1 : Xn/2
@@ -17,12 +17,14 @@ for i = 1 : Xn/2
 end
 
 % Мутация и инверсия
-P = 0.05;
+P1 = 0.00;
+P2 = 0.00;
 for i = 1 : Xn
-    if (rand < P)
+    k = rand;
+    if (k < P1)
         Children(i,:) = Mutate(Children(i,:));
     end
-    if (rand < P)
+    if (k < P2)
         Children(i,:) = Inverse(Children(i,:));
     end
 end
@@ -41,7 +43,7 @@ for i = 1 : Xn
 end
 
 Phi = zeros(Xn,1);
-q = 2;
+q = 3;
 for i = 1 : Xn
     b = 0;
     for j = 1 : Xn
@@ -54,24 +56,7 @@ for i = 1 : Xn
     end
     Phi(i) = 1/(1+b/(Xn-1))^q;
 end
-sum(Phi == 1)
-
-% график точек X
-figure('Name',Name)
-title('Стартовое поколение')
-subplot(1, 2, 1)
-plot(X(:,1),X(:,2),'*r');
-xlabel('X1');
-ylabel('X2');
-grid on;
-% график точек J
-subplot(1, 2, 2)
-hold on;
-grid on;
-xlabel('J1');
-ylabel('J2');
-pos = find(Phi == 1);
-plot(J(:,1),J(:,2),'*b');
-plot(J(pos,1),J(pos,2),'or');
+% pos = find(Phi == 1);
+% ShowGeneration(X,J,pos,Name);
 end
 
