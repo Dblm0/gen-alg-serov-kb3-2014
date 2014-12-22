@@ -9,7 +9,7 @@ NextPoint = zeros(N,1);
 for p = 1 : N
     GreedPoint = Parents(p,CrossPoint);
     Children(p,1) = GreedPoint;
-    for k = 2 : L
+    for k = 2 : L - 2
         for i = 1 : N
             P = find(Parents(i,:) == GreedPoint);
             if P == L
@@ -22,7 +22,6 @@ for p = 1 : N
             else
                 Phi(i) = GetRouteLength(Parents(i , [P , NextPoint(i)]) ,Matr);
             end
-            
         end
         Min = min(Phi(Phi ~= 0));
         if isempty(Min)
@@ -33,6 +32,11 @@ for p = 1 : N
         end
         Children(p,k) = GreedPoint;
     end
+    %     модификация алгоритма
+    LastPoints = setdiff( (1:L) , Children(p,1:k) );
+    LastRoute = [Children(p,k) LastPoints];
+    MinRoute = GetMinRoute(LastRoute,Matr);
+    Children(p,k : L) = MinRoute;
 end
 end
 
