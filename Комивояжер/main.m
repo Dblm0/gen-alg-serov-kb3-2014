@@ -2,8 +2,8 @@ clear all
 close all
 clc
 R = 0.5;
-Nr = 85;
-N = 30;
+Nr = 40;
+N = 25;
 c = sqrt(Nr);
 Points = GetCirclePoints(N , R);
 Matr = GetDistMatr(Points);
@@ -17,7 +17,7 @@ end
 pos = find(RoutesLength == min(RoutesLength),1,'first');
 ShowRoute(RoutesCoord(pos,:,:) , RoutesLength(pos,:),'Начальная популяция' );
 % Следующие поколения
-NGen = 10;
+NGen = 4;
 Min = zeros(NGen,1);
 for i = 1 : NGen
     Name = sprintf('%d Generation',i);
